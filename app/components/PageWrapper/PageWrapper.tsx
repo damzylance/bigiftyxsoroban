@@ -1,11 +1,8 @@
 "use client";
-import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { ReactNode } from "react";
 import { MdArrowBackIos } from "react-icons/md";
-import WalletConnect from "../ConnectWallet/WalletConnect";
 import Header from "../Header/Header";
 
 interface PageWrapperProps {
@@ -14,7 +11,6 @@ interface PageWrapperProps {
 }
 const PageWrapper: React.FC<PageWrapperProps> = ({ children, page }) => {
 	const router = useRouter();
-	const pathName = usePathname();
 	return (
 		<VStack
 			bg="gray.100"

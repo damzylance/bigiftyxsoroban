@@ -6,15 +6,9 @@ import {
 	Button,
 	Input,
 	useToast,
-	HStack,
-	Flex,
 } from "@chakra-ui/react";
 import { ReactConfetti } from "react-confetti";
-
 import { useForm } from "react-hook-form";
-// import axios from "axios";
-import { RxCardStack, RxPlus } from "react-icons/rx";
-import { MdRedeem } from "react-icons/md";
 import axios from "axios";
 import { useWallet } from "@/app/context/WalletContext";
 function Reedeem() {
@@ -27,7 +21,6 @@ function Reedeem() {
 	} = useForm();
 	const toast = useToast();
 	const [confetti, setConfitti] = useState();
-	const [userAddres, setUserAddress] = useState("");
 	const [windowSize, setWindowSize] = useState({
 		width: undefined,
 		height: undefined,
@@ -35,7 +28,6 @@ function Reedeem() {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [showHistory, setShowHistory] = useState(false);
-	const [history, setHistory] = useState([]);
 
 	const handleRedeem = async (data: any) => {
 		setIsLoading(true);

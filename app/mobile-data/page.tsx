@@ -11,9 +11,7 @@ import {
 	useAirtimePurchase,
 } from "../context/AirtimePurchaseContext";
 
-type Props = {};
-
-const Data = (props: Props) => {
+const Data = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const {
 		selectedProvider,

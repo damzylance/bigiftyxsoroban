@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, ReactNode, useEffect, useState } from "react";
-import { Box, Button, Divider, Flex, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, VStack } from "@chakra-ui/react";
 
 import { RxCardStack, RxPlus } from "react-icons/rx";
 import { MdRedeem } from "react-icons/md";

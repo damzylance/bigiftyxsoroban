@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
 	Box,
 	Button,
@@ -6,36 +6,23 @@ import {
 	FormErrorMessage,
 	FormLabel,
 	HStack,
-	IconButton,
 	Input,
-	InputGroup,
-	InputRightElement,
 	SimpleGrid,
-	Text,
 	Textarea,
 	VStack,
 	useToast,
 } from "@chakra-ui/react";
-import { RxCardStack, RxPlus } from "react-icons/rx";
-import { MdRedeem } from "react-icons/md";
 import Image from "next/image";
-import design from "../../public/assets/bitgifty-birthday01.jpg";
 import { useForm } from "react-hook-form";
 import { sendGiftCard } from "@/app/utils/serverActions";
 
 import { useWallet } from "@/app/context/WalletContext";
-import Link from "next/link";
-import axios from "axios";
 import Confetti from "react-confetti";
 import { templates } from "@/app/utils/templates";
-import TokenList from "../TokenList/TokenList";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { handleSendPayment } from "@/app/utils/contractActions";
 
-type Props = {};
-
-const CreateGiftCard = (props: Props) => {
+const CreateGiftCard = () => {
 	const { walletAddress } = useWallet();
 	const toast = useToast();
 
@@ -45,7 +32,6 @@ const CreateGiftCard = (props: Props) => {
 		receipent_email: string;
 	};
 
-	const [userAddress, setUserAddress] = useState("");
 	const {
 		register,
 		handleSubmit,
@@ -299,7 +285,6 @@ const CreateGiftCard = (props: Props) => {
 						>
 							Create & Send
 						</Button>
-						<Text>{userAddress}</Text>
 					</Box>
 				</VStack>
 			</form>

@@ -5,9 +5,7 @@ import React from "react";
 import WalletConnect from "../ConnectWallet/WalletConnect";
 import { useRouter } from "next/navigation";
 
-type Props = {};
-
-const Header = (props: Props) => {
+const Header = () => {
 	const router = useRouter();
 	return (
 		<Flex

@@ -9,13 +9,7 @@ type Props = {
 	tokenTicker: string;
 };
 
-const AmountCard = ({
-	action,
-	ticker,
-	amount,
-	tokenAmount,
-	tokenTicker,
-}: Props) => {
+const AmountCard = ({ action, ticker, amount, tokenTicker }: Props) => {
 	return (
 		<VStack
 			onClick={action}

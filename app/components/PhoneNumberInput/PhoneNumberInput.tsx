@@ -2,7 +2,6 @@
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import {
 	Box,
-	Circle,
 	Drawer,
 	DrawerBody,
 	DrawerContent,
@@ -13,13 +12,10 @@ import {
 	useDisclosure,
 	VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { TbTriangleInvertedFilled } from "react-icons/tb";
 import Image from "next/image";
-import {
-	AirtimePurchaseProvider,
-	useAirtimePurchase,
-} from "@/app/context/AirtimePurchaseContext";
+import { useAirtimePurchase } from "@/app/context/AirtimePurchaseContext";
 import { BsCircle } from "react-icons/bs";
 
 type Props = {

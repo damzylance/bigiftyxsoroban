@@ -5,9 +5,7 @@ import { Networks, SorobanRpc, Horizon } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-type Props = {};
-
-const BalanceCard = (props: Props) => {
+const BalanceCard = () => {
 	const { walletAddress } = useWallet();
 	const [balance, setBalance] = useState("0");
 	const router = useRouter();

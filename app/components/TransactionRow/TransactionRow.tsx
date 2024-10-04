@@ -1,7 +1,6 @@
 import { formatDate } from "@/app/utils/utils";
-import { Avatar, HStack, Text, VStack } from "@chakra-ui/react";
+import { HStack, Text, VStack } from "@chakra-ui/react";
 import React from "react";
-import { BsGift } from "react-icons/bs";
 import { FaGlobe, FaMobileAlt, FaTv } from "react-icons/fa";
 import { FaBolt } from "react-icons/fa6";
 

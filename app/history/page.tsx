@@ -6,9 +6,7 @@ import TransactionRow from "../components/TransactionRow/TransactionRow";
 import axios from "axios";
 import { useWallet } from "../context/WalletContext";
 
-type Props = {};
-
-const TransactionHistory = (props: Props) => {
+const TransactionHistory = () => {
 	const { walletAddress } = useWallet();
 	const [isLoading, setIsloading] = useState(true);
 	const [transactions, setTransactions] = useState([]);

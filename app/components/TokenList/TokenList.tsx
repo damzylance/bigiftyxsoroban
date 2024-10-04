@@ -7,20 +7,13 @@ import {
 	VStack,
 	Drawer,
 	DrawerBody,
-	DrawerFooter,
-	DrawerHeader,
 	DrawerOverlay,
 	DrawerContent,
-	DrawerCloseButton,
-	Img,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import usdcLogo from "../../assets/icons/tokenicons/usdcLogo.svg";
+import React from "react";
 import Image from "next/image";
 
-type Props = {};
-
-const TokenList = (props: Props) => {
+const TokenList = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	return (

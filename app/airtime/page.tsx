@@ -25,18 +25,13 @@ type Props = {};
 const AirtimeData = (props: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { walletAddress } = useWallet();
-	const rate = process.env.NEXT_PUBLIC_RATE;
 	const {
-		selectedProvider,
-		setSelectedProvider,
 		fiatAmount,
 		setFiatAmount,
 		tokenAmount,
 		setTokenAmount,
 		phoneNumber,
 		setPhoneNumber,
-		country,
-		setCountry,
 	} = useAirtimePurchase();
 	return (
 		<PageWrapper page={"Airtime"}>
