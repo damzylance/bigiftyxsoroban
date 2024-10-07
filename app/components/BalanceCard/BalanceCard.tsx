@@ -1,7 +1,7 @@
 import { useWallet } from "@/app/context/WalletContext";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { HStack, Text, VStack } from "@chakra-ui/react";
-import { Networks, SorobanRpc, Horizon } from "@stellar/stellar-sdk";
+import { Horizon } from "@stellar/stellar-sdk";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 

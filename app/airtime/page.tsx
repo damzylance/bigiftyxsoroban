@@ -20,9 +20,7 @@ import {
 } from "../context/AirtimePurchaseContext";
 import { useWallet } from "../context/WalletContext";
 
-type Props = {};
-
-const AirtimeData = (props: Props) => {
+const AirtimeData = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { walletAddress } = useWallet();
 	const {
@@ -161,6 +159,8 @@ const AirtimeData = (props: Props) => {
 				<PaymentPrompt
 					isOpen={isOpen}
 					onClose={onClose}
+					onOpen={onOpen}
+					currency="N"
 					currencyTicker={"₦"}
 					tokenTicker={"USDC"}
 					amount={fiatAmount}

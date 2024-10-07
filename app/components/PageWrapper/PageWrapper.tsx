@@ -7,7 +7,7 @@ import Header from "../Header/Header";
 
 interface PageWrapperProps {
 	children: ReactNode;
-	page: String;
+	page: string;
 }
 const PageWrapper: React.FC<PageWrapperProps> = ({ children, page }) => {
 	const router = useRouter();

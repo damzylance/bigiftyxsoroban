@@ -19,7 +19,7 @@ import { useAirtimePurchase } from "@/app/context/AirtimePurchaseContext";
 import { BsCircle } from "react-icons/bs";
 
 type Props = {
-	action: (e: any) => void;
+	action: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	phoneNumber: string;
 };
 

@@ -10,23 +10,14 @@ import {
 	Spinner,
 } from "@chakra-ui/react";
 
-import { usePathname, useRouter } from "next/navigation";
-import {
-	FaFootballBall,
-	FaGifts,
-	FaGlobe,
-	FaHome,
-	FaMobileAlt,
-	FaUser,
-	FaWallet,
-} from "react-icons/fa";
+import { FaFootballBall, FaGifts, FaGlobe, FaMobileAlt } from "react-icons/fa";
 import BalanceCard from "./components/BalanceCard/BalanceCard";
 import TransactionRow from "./components/TransactionRow/TransactionRow";
 import GiftCardServiceItem from "./components/ServiceItem/GiftCardServiceItem";
 import { MdCardGiftcard } from "react-icons/md";
 import { BsCash } from "react-icons/bs";
 import ServiceItem from "./components/ServiceItem/ServiceItem";
-import { BiSolidData } from "react-icons/bi";
+
 import { FcElectricity } from "react-icons/fc";
 import { FaTv } from "react-icons/fa6";
 import Header from "./components/Header/Header";

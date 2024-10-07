@@ -16,7 +16,30 @@ import { handleSendPayment } from "@/app/utils/contractActions";
 import { useAirtimePurchase } from "@/app/context/AirtimePurchaseContext";
 import { buyAirtime } from "@/app/utils/serverActions";
 
-export function PaymentPrompt(props: any) {
+type Props = {
+	onClose: () => void;
+	isOpen: boolean;
+	onOpen: () => void;
+	currency: string;
+	currencyTicker: string;
+	amount: number;
+	billType: string;
+	tokenAmount: number;
+	tokenTicker: string;
+	productName: string;
+	feeAmount: string;
+};
+export function PaymentPrompt({
+	tokenAmount,
+	billType,
+	amount,
+	currency,
+	onClose,
+	isOpen,
+	tokenTicker,
+	feeAmount,
+	productName,
+}: Props) {
 	const { walletAddress } = useWallet();
 	const { phoneNumber, selectedProvider } = useAirtimePurchase();
 	const [isLoading, setIsLoading] = useState(false);
@@ -25,22 +48,22 @@ export function PaymentPrompt(props: any) {
 	const sendPayment = async () => {
 		const CONTRACT_ID = process.env.NEXT_PUBLIC_CONTRACT_ID as string;
 		const tokenAddress = process.env.NEXT_PUBLIC_USDC_TOKEN_ID as string;
-		const tokenAmount = Math.round(props.tokenAmount * 10 ** 7);
+		const tokenInStroop = Math.round(tokenAmount * 10 ** 7);
 
 		setIsLoading(true);
 		const tx = await handleSendPayment(
 			CONTRACT_ID,
 			tokenAddress,
 			walletAddress,
-			tokenAmount
+			tokenInStroop
 		);
 		if (tx.status === "PENDING") {
 			const data = {
-				bill_type: props.billType.toUpperCase(),
+				bill_type: billType.toUpperCase(),
 				item_code: selectedProvider?.itemCode,
 				biller_code: selectedProvider?.billerCode,
-				amount: props.amount,
-				crypto_amount: parseFloat(props.tokenAmount).toFixed(4),
+				amount: amount,
+				crypto_amount: tokenAmount.toFixed(4),
 				customer: phoneNumber,
 				chain: "usdc",
 				wallet_address: walletAddress,
@@ -56,17 +79,17 @@ export function PaymentPrompt(props: any) {
 					status: "success",
 				});
 				setIsLoading(false);
-				props.onClose();
+				onClose();
 			} else {
 				setIsLoading(false);
 				toast({ title: "Error occured ", status: "warning" });
-				props.onClose();
+				onClose();
 			}
 		}
 	};
 	return (
 		<>
-			<Drawer isOpen={props.isOpen} placement="bottom" onClose={props.onClose}>
+			<Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
 				<DrawerOverlay />
 				<DrawerContent
 					borderRadius={"12px 12px 0 0"}
@@ -80,32 +103,30 @@ export function PaymentPrompt(props: any) {
 						<VStack width={"full"} p={"20px 10px"} gap={"20px"}>
 							<VStack>
 								<Text fontSize={"x-large"} fontWeight={"600"}>
-									{props.currencyTicker}
-									{props.amount}
+									{currency}
+									{amount}
 								</Text>
 								<Text fontSize={"sm"} fontWeight={"600"}>
-									{props.tokenTicker} {parseFloat(props.tokenAmount).toFixed(4)}
+									{tokenTicker} {tokenAmount.toFixed(4)}
 								</Text>
 							</VStack>
 
 							<VStack width={"full"} gap={"10px"}>
 								<HStack width={"full"} justifyContent={"space-between"}>
 									<Text fontSize={"sm"}>Product Name</Text>
-									<Text fontSize={"sm"}>{props.productName}</Text>
+									<Text fontSize={"sm"}>{productName}</Text>
 								</HStack>
 								<HStack width={"full"} justifyContent={"space-between"}>
 									<Text fontSize={"sm"}>Amount</Text>
-									<Text fontSize={"sm"}>{props.amount}</Text>
+									<Text fontSize={"sm"}>{amount}</Text>
 								</HStack>
 								<HStack width={"full"} justifyContent={"space-between"}>
 									<Text fontSize={"sm"}>Token Amount</Text>
-									<Text fontSize={"sm"}>
-										{parseFloat(props.tokenAmount).toFixed(4)}
-									</Text>
+									<Text fontSize={"sm"}>{tokenAmount.toFixed(4)}</Text>
 								</HStack>
 								<HStack width={"full"} justifyContent={"space-between"}>
 									<Text fontSize={"sm"}>Fee</Text>
-									<Text fontSize={"sm"}>{props.feeAmount}</Text>
+									<Text fontSize={"sm"}>{feeAmount}</Text>
 								</HStack>
 							</VStack>
 							<Button

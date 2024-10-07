@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { isConnected, getAddress, requestAccess } from "@stellar/freighter-api"; // Adjust the import to where your Freighter wallet functions are
+import { isConnected, getAddress, requestAccess } from "@stellar/freighter-api";
 import { useWallet } from "@/app/context/WalletContext";
 
 export const useConnectWallet = () => {

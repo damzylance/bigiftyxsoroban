@@ -1,6 +1,5 @@
 // src/utils/soroban.ts
-import { Contract, Address, xdr } from "@stellar/stellar-sdk"; // Example, adjust to SDK usage
-import { getAddress } from "@stellar/freighter-api";
+import { Contract, xdr } from "@stellar/stellar-sdk"; // Example, adjust to SDK usage
 
 // Initialize contract
 export async function initializeContract(

@@ -2,7 +2,7 @@
 
 import DataAmountCard from "@/app/components/DataAmountCard/DataAmountCard";
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
-import { PaymentPrompt } from "@/app/components/PaymentPrompt/PaymentPrompt";
+// import { PaymentPrompt } from "@/app/components/PaymentPrompt/PaymentPrompt";
 import PhoneNumberInput from "@/app/components/PhoneNumberInput/PhoneNumberInput";
 import { Grid, GridItem, Text, useDisclosure, VStack } from "@chakra-ui/react";
 import React from "react";
@@ -12,19 +12,8 @@ import {
 } from "../context/AirtimePurchaseContext";
 
 const Data = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
-	const {
-		selectedProvider,
-		setSelectedProvider,
-		fiatAmount,
-		setFiatAmount,
-		tokenAmount,
-		setTokenAmount,
-		phoneNumber,
-		setPhoneNumber,
-		country,
-		setCountry,
-	} = useAirtimePurchase();
+	const { onOpen } = useDisclosure();
+	const { phoneNumber, setPhoneNumber } = useAirtimePurchase();
 	return (
 		<AirtimePurchaseProvider>
 			<PageWrapper page={"Mobile Data"}>
@@ -119,16 +108,16 @@ const Data = () => {
 							</GridItem>
 						</Grid>
 					</VStack>
-					<PaymentPrompt
+					{/* <PaymentPrompt
 						isOpen={isOpen}
 						onClose={onClose}
 						currencyTicker={"₦"}
 						tokenTicker={"USDC"}
-						amount={"1000"}
-						tokenAmount={"0.61"}
+						amount={1000}
+						tokenAmount={0.61}
 						productName={"Airtime"}
 						feeAmount={"0"}
-					/>
+					/> */}
 				</VStack>
 			</PageWrapper>
 		</AirtimePurchaseProvider>

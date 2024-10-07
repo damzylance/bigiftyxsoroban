@@ -81,12 +81,23 @@ export const handleSendPayment = async (
 			txhash: submittedTx.hash,
 			message: "Trasaction sent",
 		};
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error("Error submitting transaction:", error);
-		if (error.response && error.response.data) {
-			console.error("Detailed error:", error.response.data);
+		if (error instanceof Error) {
+			if (error.message) {
+				console.error("Error message:", error.message);
+			}
+		} else if (
+			typeof error === "object" &&
+			error !== null &&
+			"response" in error
+		) {
+			const axiosError = error as { response: { data: any } }; // Narrow the type
+			if (axiosError.response && axiosError.response.data) {
+				console.error("Detailed error:", axiosError.response.data);
+			}
 		}
-		return { status: "error", txhash: null, message: "Trasaction fialed" };
+		return { status: "error", txhash: null, message: "Transaction failed" };
 	}
 };
 
@@ -111,111 +122,111 @@ const pollTransactionConfirmation = async (
 	}
 };
 
-const approveToken = async (
-	CONTRACT_ID: string,
-	tokenAddress: string,
-	walletAddress: string
-) => {
-	//
-	try {
-		// Initialize server and contract
-		const server = new SorobanRpc.Server(SOROBAN_URL);
-		const account = await server.getAccount(walletAddress);
-		const { sequence } = await server.getLatestLedger();
-		console.log(sequence);
-		const expirationLedger = sequence + 1000000;
-		console.log(expirationLedger);
-		const tokenSmartContract = new Contract(
-			"CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA"
-		);
+// const approveToken = async (
+// 	CONTRACT_ID: string,
+// 	tokenAddress: string,
+// 	walletAddress: string
+// ) => {
+// 	//
+// 	try {
+// 		// Initialize server and contract
+// 		const server = new SorobanRpc.Server(SOROBAN_URL);
+// 		const account = await server.getAccount(walletAddress);
+// 		const { sequence } = await server.getLatestLedger();
+// 		console.log(sequence);
+// 		const expirationLedger = sequence + 1000000;
+// 		console.log(expirationLedger);
+// 		const tokenSmartContract = new Contract(
+// 			"CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA"
+// 		);
 
-		console.log("Contract found", NETWORK_PASSPHRASE);
-		const amount = xdr.ScVal.scvI128(
-			new xdr.Int128Parts({
-				lo: xdr.Uint64.fromString(BigInt(1000000000).toString()), // Replace AMOUNT with your deposit amount
-				hi: xdr.Int64.fromString("0"), // Assumes amount fits into lower 64 bits
-			})
-		);
-		const tx = new TransactionBuilder(account, {
-			fee: BASE_FEE,
-			networkPassphrase: NETWORK_PASSPHRASE,
-		})
-			.addOperation(
-				tokenSmartContract.call(
-					"approve",
-					new Address(walletAddress).toScVal(),
-					new Address(CONTRACT_ID).toScVal(),
-					amount,
-					xdr.ScVal.scvU32(expirationLedger)
-				)
-			)
-			.setTimeout(240)
-			.build();
-		const preparedTransaction = await server.prepareTransaction(tx);
-		const xdrTransaction = preparedTransaction.toXDR();
-		// Sign the transaction using Freighter
-		const signedXdr = await signTransaction(xdrTransaction, {
-			networkPassphrase: Networks.TESTNET,
-		});
-		// Send the signed transaction
-		const response = await server.sendTransaction(
-			new Transaction(signedXdr.signedTxXdr, Networks.TESTNET)
-		);
+// 		console.log("Contract found", NETWORK_PASSPHRASE);
+// 		const amount = xdr.ScVal.scvI128(
+// 			new xdr.Int128Parts({
+// 				lo: xdr.Uint64.fromString(BigInt(1000000000).toString()), // Replace AMOUNT with your deposit amount
+// 				hi: xdr.Int64.fromString("0"), // Assumes amount fits into lower 64 bits
+// 			})
+// 		);
+// 		const tx = new TransactionBuilder(account, {
+// 			fee: BASE_FEE,
+// 			networkPassphrase: NETWORK_PASSPHRASE,
+// 		})
+// 			.addOperation(
+// 				tokenSmartContract.call(
+// 					"approve",
+// 					new Address(walletAddress).toScVal(),
+// 					new Address(CONTRACT_ID).toScVal(),
+// 					amount,
+// 					xdr.ScVal.scvU32(expirationLedger)
+// 				)
+// 			)
+// 			.setTimeout(240)
+// 			.build();
+// 		const preparedTransaction = await server.prepareTransaction(tx);
+// 		const xdrTransaction = preparedTransaction.toXDR();
+// 		// Sign the transaction using Freighter
+// 		const signedXdr = await signTransaction(xdrTransaction, {
+// 			networkPassphrase: Networks.TESTNET,
+// 		});
+// 		// Send the signed transaction
+// 		const response = await server.sendTransaction(
+// 			new Transaction(signedXdr.signedTxXdr, Networks.TESTNET)
+// 		);
 
-		console.log(response);
-		if (response.status !== "PENDING") {
-			throw new Error("Transaction failed to submit");
-		}
+// 		console.log(response);
+// 		if (response.status !== "PENDING") {
+// 			throw new Error("Transaction failed to submit");
+// 		}
 
-		// Poll for transaction confirmation
-		await pollTransactionConfirmation(server, response.hash);
-	} catch (error: any) {
-		console.error("Error submitting transaction:", error);
-		if (error.response && error.response.data) {
-			console.error("Detailed error:", error.response.data);
-		}
-	}
-};
+// 		// Poll for transaction confirmation
+// 		await pollTransactionConfirmation(server, response.hash);
+// 	} catch (error: any) {
+// 		console.error("Error submitting transaction:", error);
+// 		if (error.response && error.response.data) {
+// 			console.error("Detailed error:", error.response.data);
+// 		}
+// 	}
+// };
 
-const getAllowance = async (
-	CONTRACT_ID: string,
-	tokenAddress: string,
-	walletAddress: string
-) => {
-	try {
-		// Initialize server and contract
-		const server = new SorobanRpc.Server(SOROBAN_URL);
-		const tokenContract = new Contract(tokenAddress);
+// const getAllowance = async (
+// 	CONTRACT_ID: string,
+// 	tokenAddress: string,
+// 	walletAddress: string
+// ) => {
+// 	try {
+// 		// Initialize server and contract
+// 		const server = new SorobanRpc.Server(SOROBAN_URL);
+// 		const tokenContract = new Contract(tokenAddress);
 
-		// Convert addresses to Soroban `Address` format
-		const from = new Address(walletAddress).toScVal();
-		const spender = new Address(CONTRACT_ID).toScVal();
-		const account = await server.getAccount(walletAddress);
+// 		// Convert addresses to Soroban `Address` format
+// 		const from = new Address(walletAddress).toScVal();
+// 		const spender = new Address(CONTRACT_ID).toScVal();
+// 		const account = await server.getAccount(walletAddress);
 
-		const tx = new TransactionBuilder(account, {
-			fee: BASE_FEE,
-			networkPassphrase: NETWORK_PASSPHRASE,
-		})
-			.addOperation(tokenContract.call("allowance", from, spender))
-			.setTimeout(30)
-			.build();
+// 		const tx = new TransactionBuilder(account, {
+// 			fee: BASE_FEE,
+// 			networkPassphrase: NETWORK_PASSPHRASE,
+// 		})
+// 			.addOperation(tokenContract.call("allowance", from, spender))
+// 			.setTimeout(30)
+// 			.build();
 
-		// Simulate the transaction instead of sending it
-		const simulateResponse = await server.simulateTransaction(tx);
-		console.log(simulateResponse);
+// 		// Simulate the transaction instead of sending it
+// 		const simulateResponse = await server.simulateTransaction(tx);
+// 		console.log(simulateResponse);
 
-		if (simulateResponse) {
-			const result = simulateResponse.result;
-			console.log(result);
-			if (result.auth && result.retval) {
-				console.log("Allowance:", result.retval._switch.value);
-			} else {
-				console.log("Unexpected result:", result);
-			}
-		} else {
-			console.log("No results from simulation");
-		}
-	} catch (error) {
-		console.error("Error fetching allowance:", error);
-	}
-};
+// 		if (simulateResponse) {
+// 			const result = simulateResponse.result;
+// 			console.log(result);
+// 			if (result.auth && result.retval) {
+// 				console.log("Allowance:", result.retval._switch.value);
+// 			} else {
+// 				console.log("Unexpected result:", result);
+// 			}
+// 		} else {
+// 			console.log("No results from simulation");
+// 		}
+// 	} catch (error) {
+// 		console.error("Error fetching allowance:", error);
+// 	}
+// };
