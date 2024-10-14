@@ -106,7 +106,7 @@ export default function Home() {
 												amount={transaction.amount.toFixed(0)}
 												tokenAmount={transaction.crypto_amount}
 												type={transaction.bill_type}
-												status={"success" || transaction.status}
+												status={transaction.status}
 												date={transaction.time}
 											/>
 										);
