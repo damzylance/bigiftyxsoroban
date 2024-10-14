@@ -11,7 +11,7 @@ import {
 	useAirtimePurchase,
 } from "../context/AirtimePurchaseContext";
 
-const Data = () => {
+const DataContent = () => {
 	const { onOpen } = useDisclosure();
 	const { phoneNumber, setPhoneNumber } = useAirtimePurchase();
 	return (
@@ -124,4 +124,11 @@ const Data = () => {
 	);
 };
 
+const Data = () => {
+	return (
+		<AirtimePurchaseProvider>
+			<DataContent />
+		</AirtimePurchaseProvider>
+	);
+};
 export default Data;
