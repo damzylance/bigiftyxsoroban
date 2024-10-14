@@ -3,9 +3,7 @@ import React from "react";
 import GiftCardTemplate from "..";
 import Reedeem from "../../components/giftcard/Redeem";
 
-type Props = {};
-
-const Create = (props: Props) => {
+const Create = () => {
 	return (
 		<>
 			<GiftCardTemplate>

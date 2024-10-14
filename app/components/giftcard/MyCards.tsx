@@ -23,9 +23,20 @@ import Image from "next/image";
 import { FaCopy } from "react-icons/fa";
 import { useWallet } from "@/app/context/WalletContext";
 import { templates } from "@/app/utils/templates";
+
+interface CardType {
+	amount: number;
+	image: number;
+	currency: string;
+	code: string;
+	status: string;
+	receipent_email?: string; // nullable or optional
+	creation_date: string;
+}
+
 function MyCards() {
 	const toast = useToast();
-	const [cards, setCards] = useState([]);
+	const [cards, setCards] = useState<CardType[]>([]);
 
 	const [loading, setLoading] = useState(true);
 	const { walletAddress } = useWallet();
@@ -41,6 +52,7 @@ function MyCards() {
 			})
 			.catch((error) => {
 				setLoading(false);
+				console.log(error);
 				toast({ title: "Error fetching cards", status: "warning" });
 			});
 	};
@@ -58,8 +70,8 @@ function MyCards() {
 						<Spinner />
 					</Container>
 				) : cards.length > 0 ? (
-					cards.toReversed().map((card: any, id) => {
-						let link;
+					cards.toReversed().map((card: CardType, id) => {
+						let link = "";
 						for (let x = 0; x < templates.length; x++) {
 							if (card.image === templates[x].id) {
 								link = templates[x].link;
@@ -87,7 +99,16 @@ function MyCards() {
 		</Box>
 	);
 }
-const Card = (props: any) => {
+interface CardProps {
+	amount: number;
+	image: string;
+	currency: string;
+	code: string;
+	status: string;
+	receipent?: string;
+	createdOn: string;
+}
+const Card = (props: CardProps) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	return (
@@ -123,7 +144,12 @@ const Card = (props: any) => {
 		</VStack>
 	);
 };
-const CardModal = (props: any) => {
+
+interface CardModalProps extends CardProps {
+	isOpen: boolean;
+	onClose: () => void;
+}
+const CardModal = (props: CardModalProps) => {
 	const [showCode, setShowCode] = useState(false);
 	const toast = useToast();
 
@@ -182,7 +208,7 @@ const CardModal = (props: any) => {
 						<Text>Amount:</Text>
 						<HStack>
 							<Text fontSize={"4xl"}>
-								{props.amount === "10000000" ? "10" : props.amount}
+								{props.amount === parseFloat("10000000") ? "10" : props.amount}
 							</Text>
 							<Text>{props.currency}</Text>
 						</HStack>

@@ -92,7 +92,7 @@ export const handleSendPayment = async (
 			error !== null &&
 			"response" in error
 		) {
-			const axiosError = error as { response: { data: any } }; // Narrow the type
+			const axiosError = error as { response?: { data?: unknown } }; // Narrow the type
 			if (axiosError.response && axiosError.response.data) {
 				console.error("Detailed error:", axiosError.response.data);
 			}
@@ -101,26 +101,26 @@ export const handleSendPayment = async (
 	}
 };
 
-const pollTransactionConfirmation = async (
-	server: SorobanRpc.Server,
-	hash: string
-) => {
-	let response = await server.getTransaction(hash);
+// const pollTransactionConfirmation = async (
+// 	server: SorobanRpc.Server,
+// 	hash: string
+// ) => {
+// 	let response = await server.getTransaction(hash);
 
-	while (response.status === "NOT_FOUND") {
-		console.log("Waiting for transaction confirmation...");
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-		response = await server.getTransaction(hash);
-	}
+// 	while (response.status === "NOT_FOUND") {
+// 		console.log("Waiting for transaction confirmation...");
+// 		await new Promise((resolve) => setTimeout(resolve, 1000));
+// 		response = await server.getTransaction(hash);
+// 	}
 
-	if (response.status === "SUCCESS" && response.resultMetaXdr) {
-		return response;
-	} else {
-		throw new Error(
-			`Transaction failed: ${response.resultXdr || "Unknown error"}`
-		);
-	}
-};
+// 	if (response.status === "SUCCESS" && response.resultMetaXdr) {
+// 		return response;
+// 	} else {
+// 		throw new Error(
+// 			`Transaction failed: ${response.resultXdr || "Unknown error"}`
+// 		);
+// 	}
+// };
 
 // const approveToken = async (
 // 	CONTRACT_ID: string,

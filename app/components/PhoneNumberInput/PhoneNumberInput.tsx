@@ -23,9 +23,23 @@ type Props = {
 	phoneNumber: string;
 };
 
+type ProviderType = {
+	id: string;
+	name: string;
+	logo: string;
+	billerCode: string;
+	itemCode: string;
+};
+
+type ModalProps = {
+	isOpen: boolean;
+	onClose: () => void;
+	supportedNetworks: ProviderType[];
+};
+
 const PhoneNumberInput = ({ action, phoneNumber }: Props) => {
 	const { selectedProvider } = useAirtimePurchase();
-	const [supportedNetworks] = useState([
+	const [supportedNetworks] = useState<ProviderType[]>([
 		{
 			name: "MTN",
 			logo: "/images/icons/mobileproviders/mtnLogo.png",
@@ -52,7 +66,7 @@ const PhoneNumberInput = ({ action, phoneNumber }: Props) => {
 			logo: "/images/icons/mobileproviders/9mobileLogo.jpeg",
 			id: "4",
 			billerCode: "BIL103",
-			item_code: "AT134",
+			itemCode: "AT134",
 		},
 	]);
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -109,11 +123,15 @@ const PhoneNumberInput = ({ action, phoneNumber }: Props) => {
 	);
 };
 
-const PhoneNumberInputModal = (props: any) => {
+const PhoneNumberInputModal = ({
+	isOpen,
+	onClose,
+	supportedNetworks,
+}: ModalProps) => {
 	const { selectedProvider, setSelectedProvider } = useAirtimePurchase();
 
 	return (
-		<Drawer isOpen={props.isOpen} placement="top" onClose={props.onClose}>
+		<Drawer isOpen={isOpen} placement="top" onClose={onClose}>
 			<DrawerOverlay />
 			<DrawerContent
 				width={"600px"}
@@ -129,8 +147,8 @@ const PhoneNumberInputModal = (props: any) => {
 						borderRadius={"12px"}
 						gap={"10px"}
 					>
-						{props.supportedNetworks.length > 0 &&
-							props.supportedNetworks.map((network: any) => {
+						{supportedNetworks.length > 0 &&
+							supportedNetworks.map((network) => {
 								return (
 									<HStack
 										width={"full"}
@@ -140,7 +158,7 @@ const PhoneNumberInputModal = (props: any) => {
 										key={network.id}
 										onClick={() => {
 											setSelectedProvider(network);
-											props.onClose();
+											onClose();
 										}}
 									>
 										<HStack>
@@ -167,4 +185,5 @@ const PhoneNumberInputModal = (props: any) => {
 		</Drawer>
 	);
 };
+
 export default PhoneNumberInput;

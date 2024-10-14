@@ -27,16 +27,25 @@ const CreateGiftCard = () => {
 	const toast = useToast();
 
 	type Inputs = {
-		amount: string;
+		amount: number;
 		note: string;
 		receipent_email: string;
+		currency: string;
+		wallet: string;
+		image: number;
+		transaction_hash: string | null | undefined;
+	};
+
+	type GiftCardResponse = {
+		status: number;
+		message?: string;
+		data?: any;
 	};
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		getValues,
 	} = useForm<Inputs>();
 	const tokenBalance = 2000;
 
@@ -55,7 +64,7 @@ const CreateGiftCard = () => {
 			});
 		}
 	};
-	const createGiftCard = async (data: any) => {
+	const createGiftCard = async (data: Inputs) => {
 		const CONTRACT_ID = process.env.NEXT_PUBLIC_CONTRACT_ID as string;
 		const tokenAddress = process.env.NEXT_PUBLIC_USDC_TOKEN_ID as string;
 		const tokenAmount = Math.round(data.amount * 10 ** 7);
@@ -76,7 +85,7 @@ const CreateGiftCard = () => {
 
 			if (tx.status === "PENDING") {
 				data.transaction_hash = tx.txhash;
-				const giftCardResponse: any = await sendGiftCard(data); // Call to createGiftCard function
+				const giftCardResponse = (await sendGiftCard(data)) as GiftCardResponse; // Call to createGiftCard function
 				console.log(giftCardResponse);
 
 				if (giftCardResponse?.status === 201) {
@@ -209,9 +218,9 @@ const CreateGiftCard = () => {
 								placeholder="0"
 								borderRadius={"12px"}
 								{...register("amount", {
-									onChange: (e) => {
-										// setDollarAmount(parseFloat(e.target.value) * rate);
-									},
+									// onChange: (e) => {
+									// 	 setDollarAmount(parseFloat(e.target.value) * rate);
+									// },
 									min: {
 										value: amountMin,
 										message: `Minimum amount is ${amountMin}`,

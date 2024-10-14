@@ -25,6 +25,14 @@ import { useEffect, useState } from "react";
 import { useWallet } from "./context/WalletContext";
 import axios from "axios";
 
+type TransactionRowType = {
+	id: string;
+	amount: number;
+	crypto_amount: string;
+	bill_type: string;
+	status: "success" | "pending" | "failed"; // Assuming possible statuses
+	time: string; // The date field
+};
 export default function Home() {
 	const [transactions, setTransactions] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +99,7 @@ export default function Home() {
 								<Spinner />
 							) : transactions.length > 0 ? (
 								<>
-									{transactions.map((transaction: any) => {
+									{transactions.map((transaction: TransactionRowType) => {
 										return (
 											<TransactionRow
 												key={transaction.id}

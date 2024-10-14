@@ -13,7 +13,7 @@ type AirtimeData = {
 	country: string;
 };
 type createGiftcardData = {
-	transaction_hash: string | null;
+	transaction_hash: string | null | undefined;
 	currency: string;
 	image: number;
 	wallet: string;

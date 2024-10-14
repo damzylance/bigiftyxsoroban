@@ -1,8 +1,9 @@
 import { HStack, Icon, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { IconType } from "react-icons";
 
-type Props = { icon: any; name: String };
+type Props = { icon: IconType; name: string };
 
 const ServiceItem = ({ icon, name }: Props) => {
 	const router = useRouter();

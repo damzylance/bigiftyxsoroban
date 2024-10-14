@@ -6,6 +6,15 @@ import TransactionRow from "../components/TransactionRow/TransactionRow";
 import axios from "axios";
 import { useWallet } from "../context/WalletContext";
 
+type TransactionRowType = {
+	id: string;
+	amount: number;
+	crypto_amount: string;
+	bill_type: string;
+	status: "success" | "pending" | "failed"; // Assuming possible statuses
+	time: string; // The date field
+};
+
 const TransactionHistory = () => {
 	const { walletAddress } = useWallet();
 	const [isLoading, setIsloading] = useState(true);
@@ -37,7 +46,7 @@ const TransactionHistory = () => {
 					<Spinner />
 				) : transactions.length > 0 ? (
 					<>
-						{transactions.map((transaction: any) => {
+						{transactions.map((transaction: TransactionRowType) => {
 							return (
 								<TransactionRow
 									key={transaction.id}

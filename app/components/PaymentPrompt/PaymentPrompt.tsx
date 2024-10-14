@@ -29,6 +29,23 @@ type Props = {
 	productName: string;
 	feeAmount: string;
 };
+
+interface AirtimePurchaseResponse {
+	status: string;
+	message: string;
+	data: {
+		phone_number: string;
+		amount: number;
+		network: string;
+		code: string;
+		tx_ref: string;
+		reference: string;
+		batch_reference: string | null;
+		recharge_token: string | null;
+		fee: number;
+	};
+}
+
 export function PaymentPrompt({
 	tokenAmount,
 	billType,
@@ -71,8 +88,11 @@ export function PaymentPrompt({
 				country: "NG",
 			};
 			console.log(data);
-			const purchaseResponse: any = await buyAirtime(data);
-			if (purchaseResponse?.status === 200) {
+			const purchaseResponse = (await buyAirtime(
+				data
+			)) as AirtimePurchaseResponse;
+			console.log("purchase response", purchaseResponse);
+			if (purchaseResponse?.status === "success") {
 				// airtime purchased successfully
 				toast({
 					title: "Airtime purchased succesfully",
