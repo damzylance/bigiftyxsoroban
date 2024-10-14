@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { WalletProvider } from "./context/WalletContext";

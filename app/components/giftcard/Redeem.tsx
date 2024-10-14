@@ -33,6 +33,7 @@ function Reedeem() {
 			.post(`${process.env.NEXT_PUBLIC_BASE_URL}/giftcard/redeem/`, data)
 			.then((response) => {
 				setIsLoading(false);
+				console.log(response);
 				setConfetti(true);
 				toast({ title: "Giftcard redeemed successfully", status: "success" });
 			})

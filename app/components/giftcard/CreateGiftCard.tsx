@@ -22,59 +22,64 @@ import { templates } from "@/app/utils/templates";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { handleSendPayment } from "@/app/utils/contractActions";
 
+type Template = {
+	id: number;
+	link: string;
+};
+
+type Inputs = {
+	amount: number;
+	note: string;
+	receipent_email: string;
+	currency: string;
+	wallet: string;
+	image: number;
+	transaction_hash: string | null | undefined;
+};
+
+type GiftCardResponse = {
+	status: number;
+	message?: string;
+	data?: unknown;
+};
+
 const CreateGiftCard = () => {
 	const { walletAddress } = useWallet();
 	const toast = useToast();
-
-	type Inputs = {
-		amount: number;
-		note: string;
-		receipent_email: string;
-		currency: string;
-		wallet: string;
-		image: number;
-		transaction_hash: string | null | undefined;
-	};
-
-	type GiftCardResponse = {
-		status: number;
-		message?: string;
-		data?: any;
-	};
+	const tokenBalance = 2000;
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<Inputs>();
-	const tokenBalance = 2000;
 
 	const [loading, setLoading] = useState(false);
 	const [confetti, setConfitti] = useState(false);
-	const [template, setTemplate] = useState({ link: "", id: "" });
+	const [template, setTemplate] = useState<Template>({ link: "", id: 0 });
 	const amountMin = 0.1;
-	const scrollRef = useRef<HTMLDivElement>(null); // Define the type of scrollRef
+	const scrollRef = useRef<HTMLDivElement>(null);
 
 	const scrollTiles = (direction: string) => {
 		if (scrollRef.current) {
-			const scrollAmount = direction === "up" ? -150 : 150; // Scroll by 150px up or down
+			const scrollAmount = direction === "up" ? -150 : 150;
 			scrollRef.current.scrollBy({
 				top: scrollAmount,
 				behavior: "smooth",
 			});
 		}
 	};
+
 	const createGiftCard = async (data: Inputs) => {
 		const CONTRACT_ID = process.env.NEXT_PUBLIC_CONTRACT_ID as string;
 		const tokenAddress = process.env.NEXT_PUBLIC_USDC_TOKEN_ID as string;
 		const tokenAmount = Math.round(data.amount * 10 ** 7);
-		console.log(CONTRACT_ID, tokenAddress, tokenAmount);
+
 		try {
 			setLoading(true);
 			data.image = 16;
 			data.currency = "usdc";
 			data.wallet = walletAddress;
-			console.log(data);
 
 			const tx = await handleSendPayment(
 				CONTRACT_ID,
@@ -85,11 +90,9 @@ const CreateGiftCard = () => {
 
 			if (tx.status === "PENDING") {
 				data.transaction_hash = tx.txhash;
-				const giftCardResponse = (await sendGiftCard(data)) as GiftCardResponse; // Call to createGiftCard function
-				console.log(giftCardResponse);
+				const giftCardResponse = (await sendGiftCard(data)) as GiftCardResponse;
 
 				if (giftCardResponse?.status === 201) {
-					// Gift card created successfully
 					setLoading(false);
 					toast({
 						title:
@@ -99,9 +102,12 @@ const CreateGiftCard = () => {
 					setConfitti(true);
 					setTimeout(() => {
 						setConfitti(false);
-						//    navigate("/giftcard/cards");
 					}, 5000);
 				} else {
+					toast({
+						title: "Failed to create gift card",
+						status: "warning",
+					});
 				}
 			} else {
 				toast({
@@ -109,28 +115,24 @@ const CreateGiftCard = () => {
 					status: "warning",
 				});
 			}
-		} catch (error: any) {
-			console.log(error);
-			toast({ title: error.message, status: "warning" });
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				toast({ title: error.message, status: "warning" });
+			}
 		} finally {
 			setLoading(false);
 		}
 	};
+
 	return (
 		<VStack width={"full"}>
 			{confetti && <Confetti />}
-			<form
-				action=""
-				onSubmit={handleSubmit(createGiftCard)}
-				style={{ width: "100%" }}
-			>
+			<form onSubmit={handleSubmit(createGiftCard)} style={{ width: "100%" }}>
 				<VStack gap={"18px"} width={"full"}>
-					{" "}
 					<FormControl width={"full"}>
 						<FormLabel>Select your gift card design</FormLabel>
 
 						<HStack alignItems={"center"} width={"full"} gap={6}>
-							{/* Main Image */}
 							<Image
 								src={templates[8].link}
 								width={250}
@@ -139,32 +141,24 @@ const CreateGiftCard = () => {
 								alt="selected giftcard design"
 							/>
 
-							{/* Scrollable Thumbnail Section */}
 							<VStack height={"300px"} overflowY={"hidden"} gap={1}>
-								{/* Scroll Up Button */}
-
 								<GoTriangleUp
 									fontSize={"24px"}
 									onClick={() => scrollTiles("up")}
 									cursor={"pointer"}
 								/>
-
-								{/* Scrollable Thumbnails */}
 								<VStack
 									ref={scrollRef}
 									gap={1}
 									height={"240px"}
 									overflowY={"scroll"}
 								>
-									<SimpleGrid
-										columns={[1, 2, 3]} // 1 column on mobile, 2 on tablets, 3 on desktops
-										spacing={2}
-									>
+									<SimpleGrid columns={[1, 2, 3]} spacing={2}>
 										{templates.length > 1 &&
-											templates.map((image: any, id) => {
+											templates.map((image: Template) => {
 												return (
 													<Box
-														key={id}
+														key={image.id}
 														_hover={{ border: "2px solid blue" }}
 														border={
 															image.link === template.link
@@ -172,9 +166,9 @@ const CreateGiftCard = () => {
 																: "1px solid transparent"
 														}
 														cursor={"pointer"}
-														onClick={() => {
-															setTemplate({ link: image.link, id: image.id });
-														}}
+														onClick={() =>
+															setTemplate({ link: image.link, id: image.id })
+														}
 													>
 														<Image
 															src={image.link}
@@ -189,7 +183,6 @@ const CreateGiftCard = () => {
 									</SimpleGrid>
 								</VStack>
 
-								{/* Scroll Down Button */}
 								<GoTriangleDown
 									fontSize={"24px"}
 									onClick={() => scrollTiles("down")}
@@ -207,10 +200,7 @@ const CreateGiftCard = () => {
 								type={"text"}
 								padding={"12px"}
 								size={"lg"}
-								_focusVisible={{
-									outline: "none",
-									border: "none",
-								}}
+								_focusVisible={{ outline: "none", border: "none" }}
 								bg={"#dfe6f2"}
 								color={"#373737"}
 								border={"0px"}
@@ -218,9 +208,6 @@ const CreateGiftCard = () => {
 								placeholder="0"
 								borderRadius={"12px"}
 								{...register("amount", {
-									// onChange: (e) => {
-									// 	 setDollarAmount(parseFloat(e.target.value) * rate);
-									// },
 									min: {
 										value: amountMin,
 										message: `Minimum amount is ${amountMin}`,
@@ -236,14 +223,11 @@ const CreateGiftCard = () => {
 					</HStack>
 					<HStack width={"full"}>
 						<FormControl flex={2}>
-							<FormLabel fontSize={"small"}>Receipent Email</FormLabel>
+							<FormLabel fontSize={"small"}>Recipient Email</FormLabel>
 
 							<Input
 								size={"lg"}
-								_focusVisible={{
-									outline: "none",
-									border: "none",
-								}}
+								_focusVisible={{ outline: "none", border: "none" }}
 								bg={"#dfe6f2"}
 								color={"#373737"}
 								borderRadius={"12px"}
@@ -266,10 +250,7 @@ const CreateGiftCard = () => {
 						<FormControl>
 							<FormLabel fontSize={"small"}>Note (optional)</FormLabel>
 							<Textarea
-								_focusVisible={{
-									outline: "none",
-									border: "none",
-								}}
+								_focusVisible={{ outline: "none", border: "none" }}
 								outline={"none"}
 								bg={"#dfe6f2"}
 								color={"#373737"}
