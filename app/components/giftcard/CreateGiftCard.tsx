@@ -22,7 +22,6 @@ import Confetti from "react-confetti";
 import { templates } from "@/app/utils/templates";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { handleSendPayment } from "@/app/utils/contractActions";
-import TokenList from "../TokenList/TokenList";
 
 type Template = {
 	id: number;
