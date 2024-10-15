@@ -14,14 +14,14 @@ import React from "react";
 import Image from "next/image";
 
 const TokenList = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { isOpen, onClose } = useDisclosure();
 
 	return (
 		<VStack
 			borderRadius={"20px"}
 			bg={"#fff"}
 			p={"5px"}
-			onClick={onOpen}
+			// onClick={onOpen}
 			cursor={"pointer"}
 		>
 			<HStack>

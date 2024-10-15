@@ -8,6 +8,7 @@ import {
 	HStack,
 	Input,
 	SimpleGrid,
+	Text,
 	Textarea,
 	VStack,
 	useToast,
@@ -21,6 +22,7 @@ import Confetti from "react-confetti";
 import { templates } from "@/app/utils/templates";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { handleSendPayment } from "@/app/utils/contractActions";
+import TokenList from "../TokenList/TokenList";
 
 type Template = {
 	id: number;
@@ -194,27 +196,44 @@ const CreateGiftCard = () => {
 					<HStack width={"full"}>
 						<FormControl flex={1}>
 							<FormLabel fontSize={"small"}> Amount</FormLabel>
-
-							<Input
-								required
-								type={"text"}
-								padding={"12px"}
-								size={"lg"}
-								_focusVisible={{ outline: "none", border: "none" }}
-								bg={"#dfe6f2"}
-								color={"#373737"}
-								border={"0px"}
-								outline={"none"}
-								placeholder="0"
-								borderRadius={"12px"}
-								{...register("amount", {
-									min: {
-										value: amountMin,
-										message: `Minimum amount is ${amountMin}`,
-									},
-									max: { value: tokenBalance, message: "Insufficient funds" },
-								})}
-							/>
+							<HStack bg={"#dfe6f2"} px={"4px"} borderRadius={"12px"}>
+								<HStack
+									p={"4px"}
+									width={"100px"}
+									bg={"#fff"}
+									borderRadius={"full"}
+								>
+									<Image
+										width={20}
+										height={20}
+										src={"/images/icons/tokenicons/usdcLogo.svg"}
+										alt="usdc"
+									/>
+									<Text fontSize={"xs"} fontWeight={"20px"}>
+										USDC
+									</Text>
+								</HStack>
+								<Input
+									required
+									type={"text"}
+									padding={"12px"}
+									size={"lg"}
+									_focusVisible={{ outline: "none", border: "none" }}
+									bg={"#dfe6f2"}
+									color={"#373737"}
+									border={"0px"}
+									outline={"none"}
+									placeholder="0"
+									borderRadius={"12px"}
+									{...register("amount", {
+										min: {
+											value: amountMin,
+											message: `Minimum amount is ${amountMin}`,
+										},
+										max: { value: tokenBalance, message: "Insufficient funds" },
+									})}
+								/>
+							</HStack>
 
 							<FormErrorMessage fontSize={"small"} color={"red"}>
 								{errors.amount && errors.amount.message}
