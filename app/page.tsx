@@ -30,8 +30,8 @@ type TransactionRowType = {
 	amount: number;
 	crypto_amount: string;
 	bill_type: string;
-	status: "success" | "pending" | "failed"; // Assuming possible statuses
-	time: string; // The date field
+	status: "success" | "pending" | "failed";
+	time: string;
 };
 export default function Home() {
 	const [transactions, setTransactions] = useState([]);
@@ -70,18 +70,9 @@ export default function Home() {
 			position="relative"
 			margin={"auto"}
 		>
-			{/* Fixed Header */}
 			<Header />
 
-			{/* Scrollable Content */}
-			<Box
-				as="main"
-				flex="1"
-				p={4}
-				bg="gray.100"
-				mt="60px" // Adjusted to account for header height
-				overflowY="auto"
-			>
+			<Box as="main" flex="1" p={4} bg="gray.100" mt="60px" overflowY="auto">
 				<Box height={"800px"} width={"full"} maxW={"600px"} mx={"auto"}>
 					{/*Child component */}
 					<VStack width={"full"} gap={"20px"}>
@@ -106,7 +97,7 @@ export default function Home() {
 												amount={transaction.amount.toFixed(0)}
 												tokenAmount={transaction.crypto_amount}
 												type={transaction.bill_type}
-												status={transaction.status}
+												status={"success"}
 												date={transaction.time}
 											/>
 										);
@@ -141,7 +132,11 @@ export default function Home() {
 							/>
 						</HStack>
 						{/* Utility Menus */}
-						<Grid templateColumns="repeat(4, 1fr)" columnGap={20} rowGap={10}>
+						<Grid
+							templateColumns="repeat(4, 1fr)"
+							columnGap={["20px", "40px", "80px"]}
+							rowGap={"20px"}
+						>
 							<GridItem>
 								<ServiceItem icon={FaMobileAlt} name={"Airtime"} />
 							</GridItem>
