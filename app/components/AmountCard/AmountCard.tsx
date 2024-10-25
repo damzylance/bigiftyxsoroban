@@ -1,25 +1,34 @@
+import { useAirtimePurchase } from "@/app/context/AirtimePurchaseContext";
+import { useWallet } from "@/app/context/WalletContext";
+import { validatePhoneNumber } from "@/app/utils/utils";
 import { Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
 type Props = {
 	action: () => void;
-	ticker: string;
 	amount: string;
-	tokenAmount: string;
+	currencyTicker: string;
 	tokenTicker: string;
 };
 
-const AmountCard = ({ action, ticker, amount, tokenTicker }: Props) => {
+const AmountCard = ({ action, currencyTicker, amount, tokenTicker }: Props) => {
+	const { setFiatAmount, setTokenAmount, phoneNumber } = useAirtimePurchase();
+	const { walletAddress } = useWallet();
+
 	return (
 		<VStack
-			onClick={action}
+			onClick={() => {
+				setFiatAmount(parseFloat(amount));
+				setTokenAmount(parseFloat(amount) / 1700);
+				action();
+			}}
 			p={"20px 4px"}
 			borderRadius={"12px"}
 			bg={"#dfe6f2"}
 			cursor={"pointer"}
 		>
 			<Text fontSize={"md"} fontWeight={"800"}>
-				<span style={{ fontSize: "14px" }}>{ticker}</span>
+				<span style={{ fontSize: "14px" }}>{currencyTicker}</span>
 				{amount}
 			</Text>
 

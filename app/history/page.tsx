@@ -27,7 +27,6 @@ const TransactionHistory = () => {
 				.then((response) => {
 					setIsloading(false);
 					setTransactions(response.data.results);
-					console.log(response);
 					// rate = parseFloat(response.data);
 				})
 				.catch((error) => {

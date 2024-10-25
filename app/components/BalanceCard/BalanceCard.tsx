@@ -16,10 +16,8 @@ const BalanceCard = () => {
 			try {
 				// Fetch account details to get balances
 				const accountDetails = await server.loadAccount(walletAddress);
-				console.log("balance Details:", accountDetails.balances);
 
 				// Log USDC balances
-				console.log(accountDetails.balances[0].balance);
 				setBalance(parseFloat(accountDetails.balances[0].balance).toFixed(2));
 			} catch (error) {
 				console.error("Error fetching account information:", error);

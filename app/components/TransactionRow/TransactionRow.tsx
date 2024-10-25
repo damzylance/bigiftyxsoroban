@@ -16,11 +16,11 @@ const TransactionRow = ({ type, amount, tokenAmount, date, status }: Props) => {
 	const transactionIcon = () => {
 		if (type.toLowerCase() === "airtime") {
 			return <FaMobileAlt />;
-		} else if (type === "data") {
+		} else if (type.toLocaleLowerCase() === "mobiledata") {
 			return <FaGlobe />;
-		} else if (type === "electricity") {
+		} else if (type.toLocaleLowerCase() === "electricity") {
 			return <FaBolt />;
-		} else if (type === "cable") {
+		} else if (type.toLocaleLowerCase() === "cable") {
 			return <FaTv />;
 		}
 	};

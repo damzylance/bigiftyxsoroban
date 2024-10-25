@@ -2,11 +2,11 @@ import React, { createContext, useContext, useState } from "react";
 
 // Define the type for selectedProvider
 type ProviderType = {
-	name: string;
-	logo: string;
-	id: string;
-	billerCode: string;
-	itemCode: string;
+	name?: string;
+	logo?: string;
+	id?: string;
+	billerCode?: string;
+	itemCode?: string;
 };
 
 // Define the context type
@@ -21,14 +21,16 @@ type AirtimePurchaseContextType = {
 	setPhoneNumber: (number: string) => void;
 	country: string;
 	setCountry: (country: string) => void;
+	email: string;
+	setEmail: (email: string) => void;
 };
 
-// Create the context
+// context
 const AirtimePurchaseContext = createContext<
 	AirtimePurchaseContextType | undefined
 >(undefined);
 
-// Create a provider component
+//provider component
 export const AirtimePurchaseProvider: React.FC<{
 	children: React.ReactNode;
 }> = ({ children }) => {
@@ -39,6 +41,7 @@ export const AirtimePurchaseProvider: React.FC<{
 	const [tokenAmount, setTokenAmount] = useState<number>(0);
 	const [phoneNumber, setPhoneNumber] = useState<string>("");
 	const [country, setCountry] = useState<string>("");
+	const [email, setEmail] = useState<string>("");
 
 	const value = {
 		selectedProvider,
@@ -51,6 +54,8 @@ export const AirtimePurchaseProvider: React.FC<{
 		setPhoneNumber,
 		country,
 		setCountry,
+		email,
+		setEmail,
 	};
 
 	return (

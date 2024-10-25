@@ -12,16 +12,12 @@ import {
 	useDisclosure,
 	VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { TbTriangleInvertedFilled } from "react-icons/tb";
 import Image from "next/image";
 import { useAirtimePurchase } from "@/app/context/AirtimePurchaseContext";
 import { BsCircle } from "react-icons/bs";
-
-type Props = {
-	action: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	phoneNumber: string;
-};
+import { validatePhoneNumber } from "@/app/utils/utils";
 
 type ProviderType = {
 	id: string;
@@ -31,50 +27,34 @@ type ProviderType = {
 	itemCode: string;
 };
 
+type Props = {
+	action: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	phoneNumber: string;
+	supportedNetworks: ProviderType[];
+};
 type ModalProps = {
 	isOpen: boolean;
 	onClose: () => void;
 	supportedNetworks: ProviderType[];
 };
 
-const PhoneNumberInput = ({ action, phoneNumber }: Props) => {
-	const { selectedProvider } = useAirtimePurchase();
-	const [supportedNetworks] = useState<ProviderType[]>([
-		{
-			name: "MTN",
-			logo: "/images/icons/mobileproviders/mtnLogo.png",
-			id: "1",
-			billerCode: "BIL099",
-			itemCode: "AT099",
-		},
-		{
-			name: "GLO",
-			logo: "/images/icons/mobileproviders/gloLogo.png",
-			id: "2",
-			billerCode: "102",
-			itemCode: "AT133",
-		},
-		{
-			name: "Airtel",
-			logo: "/images/icons/mobileproviders/airtelLogo.png",
-			id: "3",
-			billerCode: "BIL100",
-			itemCode: "AT100",
-		},
-		{
-			name: "9Mobile",
-			logo: "/images/icons/mobileproviders/9mobileLogo.jpeg",
-			id: "4",
-			billerCode: "BIL103",
-			itemCode: "AT134",
-		},
-	]);
+const PhoneNumberInput = ({
+	action,
+	phoneNumber,
+	supportedNetworks,
+}: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-
+	const { selectedProvider, setSelectedProvider } = useAirtimePurchase();
+	useEffect(() => {
+		if (!selectedProvider && supportedNetworks.length > 0) {
+			setSelectedProvider(supportedNetworks[0]);
+		}
+	}, []);
 	return (
 		<HStack
 			width={"full"}
 			bg={"#fff"}
+			border={!validatePhoneNumber(phoneNumber) ? "0.5px #E0666A solid" : ""}
 			p={"5px 10px"}
 			justifyContent={"space-between"}
 			borderRadius={"12px"}
@@ -105,8 +85,7 @@ const PhoneNumberInput = ({ action, phoneNumber }: Props) => {
 						borderRadius={0}
 						type="text"
 						value={phoneNumber}
-						fontSize={"lg"}
-						fontWeight={"600"}
+						size={"lg"}
 						outline={0}
 						onChange={action}
 						_focusVisible={{ border: 0 }}
@@ -123,7 +102,7 @@ const PhoneNumberInput = ({ action, phoneNumber }: Props) => {
 	);
 };
 
-const PhoneNumberInputModal = ({
+export const PhoneNumberInputModal = ({
 	isOpen,
 	onClose,
 	supportedNetworks,
@@ -151,6 +130,7 @@ const PhoneNumberInputModal = ({
 							supportedNetworks.map((network) => {
 								return (
 									<HStack
+										cursor={"pointer"}
 										width={"full"}
 										justifyContent={"space-between"}
 										borderBottom={"1px solid #cdcdcd"}
@@ -158,6 +138,7 @@ const PhoneNumberInputModal = ({
 										key={network.id}
 										onClick={() => {
 											setSelectedProvider(network);
+											console.log(network);
 											onClose();
 										}}
 									>

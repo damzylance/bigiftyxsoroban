@@ -13,7 +13,7 @@ type Props = {
 	itemCode: string;
 };
 
-const DataAmountCard = ({
+const TvAmountCard = ({
 	action,
 	currencyTicker,
 	amount,
@@ -32,6 +32,7 @@ const DataAmountCard = ({
 
 	return (
 		<VStack
+			alignItems={"flex-start"}
 			onClick={() => {
 				if (validatePhoneNumber(phoneNumber) && walletAddress) {
 					setFiatAmount(parseFloat(amount));
@@ -43,12 +44,13 @@ const DataAmountCard = ({
 					action();
 				}
 			}}
-			p={"20px 4px"}
+			p={"4px"}
+			gap={"0"}
 			borderRadius={"12px"}
 			bg={"#dfe6f2"}
 			cursor={"pointer"}
 		>
-			<Text fontSize={"lg"} fontWeight={"800"}>
+			<Text fontSize={"sm"} fontWeight={"600"}>
 				{plan}
 			</Text>
 
@@ -62,4 +64,4 @@ const DataAmountCard = ({
 	);
 };
 
-export default DataAmountCard;
+export default TvAmountCard;

@@ -20,7 +20,6 @@ type Props = {
 	onClose: () => void;
 	isOpen: boolean;
 	onOpen: () => void;
-	currency: string;
 	currencyTicker: string;
 	amount: number;
 	billType: string;
@@ -31,7 +30,7 @@ type Props = {
 };
 
 interface AirtimePurchaseResponse {
-	status: string;
+	status: number;
 	message: string;
 	data: {
 		phone_number: string;
@@ -43,6 +42,7 @@ interface AirtimePurchaseResponse {
 		batch_reference: string | null;
 		recharge_token: string | null;
 		fee: number;
+		email?: string;
 	};
 }
 
@@ -50,7 +50,7 @@ export function PaymentPrompt({
 	tokenAmount,
 	billType,
 	amount,
-	currency,
+	currencyTicker,
 	onClose,
 	isOpen,
 	tokenTicker,
@@ -58,7 +58,7 @@ export function PaymentPrompt({
 	productName,
 }: Props) {
 	const { walletAddress } = useWallet();
-	const { phoneNumber, selectedProvider } = useAirtimePurchase();
+	const { phoneNumber, selectedProvider, email } = useAirtimePurchase();
 	const [isLoading, setIsLoading] = useState(false);
 	const toast = useToast();
 
@@ -82,6 +82,7 @@ export function PaymentPrompt({
 				amount: amount,
 				crypto_amount: tokenAmount.toFixed(4),
 				customer: phoneNumber,
+				email: email,
 				chain: "usdc",
 				wallet_address: walletAddress,
 				transaction_hash: tx.txhash,
@@ -92,7 +93,7 @@ export function PaymentPrompt({
 				data
 			)) as AirtimePurchaseResponse;
 			console.log("purchase response", purchaseResponse);
-			if (purchaseResponse?.status === "success") {
+			if (purchaseResponse?.status === 200) {
 				// airtime purchased successfully
 				toast({
 					title: "Airtime purchased succesfully",
@@ -105,6 +106,9 @@ export function PaymentPrompt({
 				toast({ title: "Error occured ", status: "warning" });
 				onClose();
 			}
+		} else {
+			setIsLoading(false);
+			toast({ title: "Error occured ", status: "warning" });
 		}
 	};
 	return (
@@ -123,7 +127,7 @@ export function PaymentPrompt({
 						<VStack width={"full"} p={"20px 10px"} gap={"20px"}>
 							<VStack>
 								<Text fontSize={"x-large"} fontWeight={"600"}>
-									{currency}
+									{currencyTicker}
 									{amount}
 								</Text>
 								<Text fontSize={"sm"} fontWeight={"600"}>

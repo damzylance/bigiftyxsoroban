@@ -45,4 +45,22 @@ export function formatDate(dateString: string) {
 	return formattedDate;
 }
 
-// Example usage
+export function validatePhoneNumber(phoneNumber: string): boolean {
+	// Regular expression to match Nigerian phone numbers starting with 070, 080, 090, or 081 followed by 8 digits
+	const phoneRegex = /^(0[789]0)\d{8}$/;
+	return phoneRegex.test(phoneNumber);
+}
+export function extractDataValue(purchaseString: string): string {
+	// Regular expression to capture a number followed by optional spaces and a unit (MB, GB, etc.)
+	const dataRegex = /(\d+)\s?(MB|GB)/i;
+	const match = purchaseString.match(dataRegex);
+	return match ? `${match[1]} ${match[2]}` : "";
+}
+
+export type ProviderType = {
+	id: string;
+	name: string;
+	logo: string;
+	billerCode: string;
+	itemCode: string;
+};

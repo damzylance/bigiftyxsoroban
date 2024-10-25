@@ -47,7 +47,6 @@ export default function Home() {
 				.then((response) => {
 					setIsLoading(false);
 					setTransactions(response.data.results);
-					console.log(response);
 					// rate = parseFloat(response.data);
 				})
 				.catch((error) => {
@@ -147,10 +146,10 @@ export default function Home() {
 								<ServiceItem icon={FcElectricity} name={"Electricity"} />
 							</GridItem>
 							<GridItem>
-								<ServiceItem icon={FaTv} name={"Cable"} />
+								<ServiceItem icon={FaTv} name={"TV"} />
 							</GridItem>
 							<GridItem>
-								<ServiceItem icon={FaFootballBall} name={"Bet"} />
+								<ServiceItem icon={FaFootballBall} name={"Betting"} />
 							</GridItem>
 						</Grid>
 					</VStack>
