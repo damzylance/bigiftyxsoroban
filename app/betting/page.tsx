@@ -86,14 +86,23 @@ const Bet9jaContent = () => {
 			setValidationToken(response.data.token);
 			setAccountHolder(`${response.data.firstName} ${response.data.lastName}`);
 			setIsValidated(true);
-		} catch (error: any) {
+		} catch (error: unknown) {
 			setIsValidated(false);
-			toast({
-				title: error.response?.data?.error || "Error validating details",
-				status: "error",
-				duration: 3000,
-				isClosable: true,
-			});
+			if (axios.isAxiosError(error)) {
+				toast({
+					title: error.response?.data?.error || "Error validating details",
+					status: "error",
+					duration: 3000,
+					isClosable: true,
+				});
+			} else {
+				toast({
+					title: "Error validating details",
+					status: "error",
+					duration: 3000,
+					isClosable: true,
+				});
+			}
 		} finally {
 			setIsValidating(false);
 		}
@@ -154,6 +163,8 @@ const Bet9jaContent = () => {
 		setFiatAmount(parseFloat(amount));
 		setTokenAmount(parseFloat(amount) / 1700);
 		PaymentOnOpen();
+
+		console.log(validationToken);
 	};
 
 	return (

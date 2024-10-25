@@ -9,8 +9,6 @@ import {
 	Text,
 	useDisclosure,
 	VStack,
-	FormControl,
-	FormErrorMessage,
 } from "@chakra-ui/react";
 import AmountCard from "@/app/components/AmountCard/AmountCard";
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
@@ -21,11 +19,7 @@ import {
 	useAirtimePurchase,
 } from "../context/AirtimePurchaseContext";
 import { useWallet } from "../context/WalletContext";
-import {
-	useAirtimePurchaseValidation,
-	useAmountValidation,
-	usePhoneValidation,
-} from "../utils/hooks/customValidation";
+import { usePhoneValidation } from "../utils/hooks/customValidation";
 
 const AirtimeData = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

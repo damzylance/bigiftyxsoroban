@@ -10,10 +10,6 @@ import {
 	GridItem,
 	useDisclosure,
 	Image,
-	Button,
-	Alert,
-	AlertIcon,
-	AlertDescription,
 	Spinner,
 	useToast,
 } from "@chakra-ui/react";

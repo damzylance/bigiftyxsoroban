@@ -1,6 +1,4 @@
 import { useAirtimePurchase } from "@/app/context/AirtimePurchaseContext";
-import { useWallet } from "@/app/context/WalletContext";
-import { validatePhoneNumber } from "@/app/utils/utils";
 import { Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
@@ -12,8 +10,7 @@ type Props = {
 };
 
 const AmountCard = ({ action, currencyTicker, amount, tokenTicker }: Props) => {
-	const { setFiatAmount, setTokenAmount, phoneNumber } = useAirtimePurchase();
-	const { walletAddress } = useWallet();
+	const { setFiatAmount, setTokenAmount } = useAirtimePurchase();
 
 	return (
 		<VStack
