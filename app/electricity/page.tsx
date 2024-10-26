@@ -91,12 +91,14 @@ const ElectricityContent = () => {
 					error: "Invalid meter number",
 				});
 			}
-		} catch (error) {
-			setCustomerValidation({
-				isValid: false,
-				customerDetails: "",
-				error: "Failed to validate meter number",
-			});
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				setCustomerValidation({
+					isValid: false,
+					customerDetails: "",
+					error: error.response?.data?.error,
+				});
+			}
 		} finally {
 			setIsValidating(false);
 		}

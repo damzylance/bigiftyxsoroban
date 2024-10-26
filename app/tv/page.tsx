@@ -23,6 +23,7 @@ import {
 	AirtimePurchaseProvider,
 	useAirtimePurchase,
 } from "../context/AirtimePurchaseContext";
+import axios from "axios";
 
 // Types
 interface Provider {
@@ -145,22 +146,36 @@ const TVContent = () => {
 
 		setIsLoading(true);
 		try {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_BASE_URL2}v2/get-bill-info/?biller_code=${selectedProvider.billerCode}`
+			const response = await axios.get(
+				`${process.env.NEXT_PUBLIC_BASE_URL2}v2/get-bill-info/`,
+				{
+					params: {
+						biller_code: selectedProvider.billerCode,
+					},
+				}
 			);
 
-			if (!response.ok) throw new Error("Failed to fetch plans");
-
-			const data = await response.json();
-			setPlans(data.data);
-		} catch (error) {
-			toast({
-				title: "Error",
-				description: "Failed to load subscription plans",
-				status: "error",
-				duration: 5000,
-				isClosable: true,
-			});
+			setPlans(response.data.data);
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				toast({
+					title: "Error",
+					description:
+						error.response?.data?.message ||
+						"Failed to load subscription plans",
+					status: "error",
+					duration: 5000,
+					isClosable: true,
+				});
+			} else {
+				toast({
+					title: "Error",
+					description: "Failed to load subscription plans",
+					status: "error",
+					duration: 5000,
+					isClosable: true,
+				});
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -178,16 +193,21 @@ const TVContent = () => {
 
 		setIsValidating(true);
 		try {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_BASE_URL2}validate-bill-service/?item-code=${selectedProvider?.itemCode}&biller-code=${selectedProvider?.billerCode}&customer=${number}`
+			const response = await axios.get(
+				`${process.env.NEXT_PUBLIC_BASE_URL2}validate-bill-service/`,
+				{
+					params: {
+						"item-code": selectedProvider?.itemCode,
+						"biller-code": selectedProvider?.billerCode,
+						customer: number,
+					},
+				}
 			);
 
-			const data = await response.json();
-
-			if (data?.data?.response_message === "Successful") {
+			if (response.data?.data?.response_message === "Successful") {
 				setCustomerValidation({
 					isValid: true,
-					customerDetails: data.data.name,
+					customerDetails: response.data.data.name,
 					error: "",
 				});
 			} else {
@@ -197,12 +217,21 @@ const TVContent = () => {
 					error: "Invalid smart card number",
 				});
 			}
-		} catch (error) {
-			setCustomerValidation({
-				isValid: false,
-				customerDetails: "",
-				error: "Failed to validate smart card",
-			});
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				setCustomerValidation({
+					isValid: false,
+					customerDetails: "",
+					error:
+						error.response?.data?.message || "Failed to validate smart card",
+				});
+			} else {
+				setCustomerValidation({
+					isValid: false,
+					customerDetails: "",
+					error: "Failed to validate smart card",
+				});
+			}
 		} finally {
 			setIsValidating(false);
 		}
