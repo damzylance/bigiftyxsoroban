@@ -9,48 +9,55 @@ interface PageWrapperProps {
 	children: ReactNode;
 	page: string;
 }
+
 const PageWrapper: React.FC<PageWrapperProps> = ({ children, page }) => {
 	const router = useRouter();
+
 	return (
 		<VStack
 			bg="gray.100"
 			h="100vh"
 			w="full"
-			maxW={"650px"}
-			margin={"auto"}
+			maxW="650px"
+			margin="auto"
 			position="relative"
+			spacing={0} // Remove default spacing between VStack items
 		>
-			<Header />
+			{/* Fixed Header */}
+			<Box position="fixed" top={0} width="full" maxW="650px" zIndex={10}>
+				<Header />
+			</Box>
 
+			{/* Main Content Container */}
 			<VStack
-				mt="70px" // Adjusted to account for header height
-				overflowY="auto"
-				width={"full"}
-				px={"20px"}
+				width="full"
+				h="100vh"
+				pt="70px" // Space for fixed header
+				spacing={0}
 			>
-				<HStack width={"full"} bg={"gray.100"} justifyContent={"space-between"}>
-					<MdArrowBackIos cursor={"pointer"} onClick={() => router.back()} />
-					<Text fontSize={"sm"} fontWeight={"600"}>
+				{/* Navigation Bar */}
+				<HStack
+					width="full"
+					bg="gray.100"
+					justifyContent="space-between"
+					px="20px"
+					py={2}
+				>
+					<MdArrowBackIos cursor="pointer" onClick={() => router.back()} />
+					<Text fontSize="sm" fontWeight="600">
 						{page}
 					</Text>
-					<Text fontSize={"sm"} fontWeight={"600"}>
+					<Text fontSize="sm" fontWeight="600">
 						History
 					</Text>
 				</HStack>
-				{
-					<VStack
-						p={0}
-						bg="gray.100"
-						mt="20px" // Adjusted to account for header height
-						// Adjusted to account for footer height
-						overflowY="auto"
-						width={"full"}
-					>
-						<Box height={"800px"} width={"full"} maxW={"600px"} mx={"auto"}>
-							{children}
-						</Box>
-					</VStack>
-				}
+
+				{/* Scrollable Content Area */}
+				<Box width="full" flex={1} overflowY="auto" px="20px" py={4}>
+					<Box width="full" maxW="600px" mx="auto">
+						{children}
+					</Box>
+				</Box>
 			</VStack>
 		</VStack>
 	);
