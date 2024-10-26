@@ -14,52 +14,84 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children, page }) => {
 	const router = useRouter();
 
 	return (
-		<VStack
+		<Box
+			position="fixed"
+			top={0}
+			left={0}
+			right={0}
+			bottom={0}
+			overflow="hidden"
 			bg="gray.100"
-			h="100vh"
-			w="full"
-			maxW="650px"
-			margin="auto"
-			position="relative"
-			spacing={0} // Remove default spacing between VStack items
 		>
-			{/* Fixed Header */}
-			<Box position="fixed" top={0} width="full" maxW="650px" zIndex={10}>
-				<Header />
-			</Box>
-
-			{/* Main Content Container */}
 			<VStack
-				width="full"
-				h="100vh"
-				pt="70px" // Space for fixed header
+				h="100%"
+				maxW="650px"
+				margin="auto"
+				position="relative"
 				spacing={0}
 			>
-				{/* Navigation Bar */}
-				<HStack
-					width="full"
-					bg="gray.100"
-					justifyContent="space-between"
-					px="20px"
-					py={2}
+				{/* Fixed Header */}
+				<Box
+					position="absolute"
+					top={0}
+					left={0}
+					right={0}
+					zIndex={10}
+					bg="white"
 				>
-					<MdArrowBackIos cursor="pointer" onClick={() => router.back()} />
-					<Text fontSize="sm" fontWeight="600">
-						{page}
-					</Text>
-					<Text fontSize="sm" fontWeight="600">
-						History
-					</Text>
-				</HStack>
+					<Header />
+				</Box>
 
 				{/* Scrollable Content Area */}
-				<Box width="full" flex={1} overflowY="auto" px="20px" py={4}>
-					<Box width="full" maxW="600px" mx="auto">
-						{children}
+				<VStack h="100%" w="100%" spacing={0} position="relative">
+					{/* Navigation Bar - Fixed below header */}
+					<Box
+						position="absolute"
+						top="60px" // Adjust based on your header height
+						left={0}
+						right={0}
+						bg="gray.100"
+						px={4}
+						py={2}
+						zIndex={5}
+					>
+						<HStack width="100%" justifyContent="space-between">
+							<MdArrowBackIos cursor="pointer" onClick={() => router.back()} />
+							<Text fontSize="sm" fontWeight="600">
+								{page}
+							</Text>
+							<Text fontSize="sm" fontWeight="600">
+								History
+							</Text>
+						</HStack>
 					</Box>
-				</Box>
+
+					{/* Main Content */}
+					<Box
+						position="absolute"
+						top="100px" // Adjust based on header + nav bar height
+						left={0}
+						right={0}
+						bottom={0}
+						overflowY="auto"
+						px={4}
+						pb={4}
+						sx={{
+							// Improve mobile scrolling
+							WebkitOverflowScrolling: "touch",
+							"&::-webkit-scrollbar": {
+								display: "none",
+							},
+							scrollbarWidth: "none",
+						}}
+					>
+						<Box width="100%" maxW="600px" mx="auto" minH="100%">
+							{children}
+						</Box>
+					</Box>
+				</VStack>
 			</VStack>
-		</VStack>
+		</Box>
 	);
 };
 
